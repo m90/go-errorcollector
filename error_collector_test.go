@@ -2,6 +2,8 @@ package errorcollector
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -106,5 +108,28 @@ func BenchmarkErrorCollector(b *testing.B) {
 		childCollector.Collect(errors.New("boop"))
 		collector.Collect(childCollector)
 		collector.Error()
+	}
+}
+
+func isLowerCase(str string) error {
+	if strings.ToLower(str) != str {
+		return fmt.Errorf("string %v wasn't all lowercase", str)
+	}
+	return nil
+}
+
+func ExampleErrorCollector() {
+	list := []string{"beep", "boOp", "Baap"}
+	err := New()
+	for _, str := range list {
+		if strings.ToLower(str) != str {
+			lcErr := isLowerCase(str)
+			err.Collect(lcErr)
+		}
+	}
+	if err != nil {
+		fmt.Printf("got error: %v", err)
+		// Output:
+		// got error: collected errors: string boOp wasn't all lowercase, string Baap wasn't all lowercase
 	}
 }
