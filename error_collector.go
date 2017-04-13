@@ -6,7 +6,7 @@ import (
 )
 
 // ErrorCollector is used to collect multiple error
-// values while still satisfying the error interface
+// values while satisfying the common error interface
 type ErrorCollector []error
 
 type unwrapper interface {
