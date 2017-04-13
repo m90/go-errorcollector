@@ -61,6 +61,20 @@ func TestErrorCollector(t *testing.T) {
 			true,
 			"collected errors: beep, boop, biip, baap",
 		},
+		{
+			[]func() error{
+				func() error {
+					collector := New()
+					subCollector := New()
+					collector.Collect(subCollector)
+					return collector
+				},
+				func() error { return nil },
+				func() error { return nil },
+			},
+			false,
+			"",
+		},
 	}
 
 	for _, test := range tests {
