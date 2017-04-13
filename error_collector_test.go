@@ -83,3 +83,13 @@ func TestErrorCollector(t *testing.T) {
 
 	}
 }
+
+func BenchmarkErrorCollector(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		collector := New()
+		childCollector := New()
+		collector.Collect(errors.New("beep"))
+		childCollector.Collect(errors.New("boop"))
+		collector.Collect(childCollector)
+	}
+}
