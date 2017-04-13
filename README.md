@@ -49,5 +49,17 @@ err.Collect(childErr)
 msg := err.Error() // => "collected errors: rock, n, roll"
 ```
 
+The collector satisfies the standard `error` interface:
+
+```go
+func checkForTypos(list []string) error {
+    err := errorcollector.New()
+    for _, string = range list {
+        err.Collect(findMistakes(string))
+    }
+    return err
+}
+```
+
 ### License
 MIT © [Frederik Ring](http://www.frederikring.com)
