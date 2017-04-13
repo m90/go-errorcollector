@@ -105,5 +105,6 @@ func BenchmarkErrorCollector(b *testing.B) {
 		collector.Collect(errors.New("beep"))
 		childCollector.Collect(errors.New("boop"))
 		collector.Collect(childCollector)
+		collector.Error()
 	}
 }
