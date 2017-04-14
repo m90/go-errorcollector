@@ -111,25 +111,27 @@ func BenchmarkErrorCollector(b *testing.B) {
 	}
 }
 
-func isLowerCase(str string) error {
+func makeLowerCase(str string) (string, error) {
 	if strings.ToLower(str) != str {
-		return fmt.Errorf("string %v wasn't all lowercase", str)
+		return strings.ToLower(str), fmt.Errorf("string %v wasn't all lowercase", str)
 	}
-	return nil
+	return str, nil
 }
 
 func ExampleErrorCollector() {
 	list := []string{"beep", "boOp", "Baap"}
+	result := []string{}
 	err := New()
 	for _, str := range list {
-		if strings.ToLower(str) != str {
-			lcErr := isLowerCase(str)
-			err.Collect(lcErr)
-		}
+		lowercased, lcErr := makeLowerCase(str)
+		err.Collect(lcErr)
+		result = append(result, lowercased)
 	}
 	if err != nil {
-		fmt.Printf("got error: %v", err)
-		// Output:
-		// got error: collected errors: string boOp wasn't all lowercase, string Baap wasn't all lowercase
+		fmt.Printf("got error: %v\n", err)
 	}
+	fmt.Printf("lowercased strings: %v", strings.Join(result, ", "))
+	// Output:
+	// got error: collected errors: string boOp wasn't all lowercase, string Baap wasn't all lowercase
+	// lowercased strings: beep, boop, baap
 }

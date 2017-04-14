@@ -1,6 +1,7 @@
 # go-errorcollector
 
 [![Build Status](https://travis-ci.org/m90/go-errorcollector.svg?branch=master)](https://travis-ci.org/m90/go-errorcollector)
+[![godoc](https://godoc.org/github.com/m90/go-errorcollector?status.svg)](http://godoc.org/github.com/m90/go-errorcollector)
 
 > collect multiple errors in golang keeping the standard error interface
 

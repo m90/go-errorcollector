@@ -1,3 +1,5 @@
+// Package errorcollector eases handling of
+// multiple errors in the same context
 package errorcollector
 
 import (
@@ -13,7 +15,7 @@ type unwrapper interface {
 	unwrap() []error
 }
 
-// New returns a new ErrorCollector
+// New returns a new nil ErrorCollector
 func New() ErrorCollector {
 	var ec ErrorCollector
 	return ec
@@ -28,7 +30,7 @@ func (ec ErrorCollector) unwrap() []error {
 }
 
 // Collect adds a single error or another collector to
-// the collection of errors
+// the collection of errors, passing nil is a noop
 func (ec *ErrorCollector) Collect(err error) {
 	if err == nil {
 		return
@@ -40,6 +42,7 @@ func (ec *ErrorCollector) Collect(err error) {
 	}
 }
 
+// Error returns a string describing the collected errors
 func (ec ErrorCollector) Error() string {
 	collection := []string{}
 	for _, err := range ec {
