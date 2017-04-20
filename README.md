@@ -29,13 +29,14 @@ if err != nil {
 
 ```
 
-Error messages will be concatenated:
+Error messages will be concatenated if there are multiple errors:
 
 ```go
 err := errorcollector.New()
 err.Collect(errors.New("beep"))
+msg := err.Error() // => "beep"
 err.Collect(errors.New("boop"))
-msg := err.Error() // => "collected errors: beep, boop"
+msg = err.Error() // => "collected errors: beep, boop"
 ```
 
 You can also collect another collector:

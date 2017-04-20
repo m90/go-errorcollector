@@ -34,7 +34,20 @@ func TestErrorCollector(t *testing.T) {
 				func() error { return nil },
 			},
 			true,
-			"collected errors: beep",
+			"beep",
+		},
+		{
+			[]func() error{
+				func() error { return nil },
+				func() error {
+					collector := New()
+					collector.Collect(errors.New("beep"))
+					return collector
+				},
+				func() error { return nil },
+			},
+			true,
+			"beep",
 		},
 		{
 			[]func() error{

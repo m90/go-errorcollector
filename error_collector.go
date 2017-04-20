@@ -44,6 +44,9 @@ func (ec *ErrorCollector) Collect(err error) {
 
 // Error returns a string describing the collected errors
 func (ec ErrorCollector) Error() string {
+	if len(ec) == 1 {
+		return ec[0].Error()
+	}
 	collection := []string{}
 	for _, err := range ec {
 		collection = append(collection, err.Error())
