@@ -9,16 +9,19 @@ import (
 
 func TestErrorCollector(t *testing.T) {
 	tests := []struct {
+		name          string
 		funcs         []func() error
 		notNil        bool
 		expectedError string
 	}{
 		{
+			"noop",
 			[]func() error{},
 			false,
 			"",
 		},
 		{
+			"no errors",
 			[]func() error{
 				func() error { return nil },
 				func() error { return nil },
@@ -28,6 +31,7 @@ func TestErrorCollector(t *testing.T) {
 			"",
 		},
 		{
+			"single error",
 			[]func() error{
 				func() error { return errors.New("beep") },
 				func() error { return nil },
@@ -37,6 +41,7 @@ func TestErrorCollector(t *testing.T) {
 			"beep",
 		},
 		{
+			"nested collectors",
 			[]func() error{
 				func() error { return nil },
 				func() error {
@@ -50,6 +55,7 @@ func TestErrorCollector(t *testing.T) {
 			"beep",
 		},
 		{
+			"multiple errors flat",
 			[]func() error{
 				func() error { return errors.New("beep") },
 				func() error { return nil },
@@ -59,6 +65,7 @@ func TestErrorCollector(t *testing.T) {
 			"collected errors: beep, boop",
 		},
 		{
+			"nested multiple levels",
 			[]func() error{
 				func() error {
 					collector := New()
@@ -77,6 +84,7 @@ func TestErrorCollector(t *testing.T) {
 			"collected errors: beep, boop, biip, baap",
 		},
 		{
+			"joint empty collectors",
 			[]func() error{
 				func() error {
 					collector := New()
@@ -93,23 +101,24 @@ func TestErrorCollector(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		errors := New()
-		for _, fn := range test.funcs {
-			errors.Collect(fn())
-		}
-		if (errors != nil) != test.notNil {
-			t.Errorf(
-				"Expected error to be %v, error was %v",
-				test.notNil,
-				errors)
-		}
-		if errors != nil && errors.Error() != test.expectedError {
-			t.Errorf(
-				"Expected error to return %v, got %v",
-				test.expectedError,
-				errors.Error())
-		}
-
+		t.Run(test.name, func(t *testing.T) {
+			errors := New()
+			for _, fn := range test.funcs {
+				errors.Collect(fn())
+			}
+			if (errors != nil) != test.notNil {
+				t.Errorf(
+					"Expected error to be %v, error was %v",
+					test.notNil,
+					errors)
+			}
+			if errors != nil && errors.Error() != test.expectedError {
+				t.Errorf(
+					"Expected error to return %v, got %v",
+					test.expectedError,
+					errors.Error())
+			}
+		})
 	}
 }
 
