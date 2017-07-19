@@ -16,14 +16,14 @@ $ go get github.com/m90/go-errorcollector
 Instantiate a new collector using `New()`, collect errors using `Collect(error)` and compare against `nil` as usual:
 
 ```go
-err := errorcollector.New()
+errs := errorcollector.New()
 
 for _, e := range elements {
     err := mutate(e)
-    err.Collect(err) // nil will be skipped
+    errs.Collect(err) // nil will be skipped
 }
 
-if err != nil {
+if errs != nil {
     // handle the error
 }
 
