@@ -51,7 +51,7 @@ err.Collect(childErr)
 msg := err.Error() // => "collected errors: rock, n, roll"
 ```
 
-The collector satisfies the standard `error` interface:
+The collector satisfies the standard `error` interface if you want to:
 
 ```go
 func checkForTypos(list []string) error {
@@ -59,7 +59,27 @@ func checkForTypos(list []string) error {
     for _, string = range list {
         err.Collect(findMistakes(string))
     }
+    // see: https://golang.org/doc/faq#nil_error
+    if err != nil {
+        return err
+    }
+    return nil
+}
+```
+
+Alternatively return an `ErrorCollector` type than can be used just like an error:
+
+```go
+func checkForTypos(list []string) errorcollector.ErrorCollector {
+    err := errorcollector.New()
+    for _, string = range list {
+        err.Collect(findMistakes(string))
+    }
     return err
+}
+
+if err := checkForTypos("speling", "bee"); err != nil {
+    // do things
 }
 ```
 

@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-// ErrorCollector is used to collect multiple error
-// values while satisfying the common error interface
+// ErrorCollector is used to collect multiple error values
 type ErrorCollector []error
 
 // New returns a new nil ErrorCollector

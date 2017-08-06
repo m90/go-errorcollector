@@ -133,14 +133,13 @@ func BenchmarkErrorCollector(b *testing.B) {
 	}
 }
 
-func makeLowerCase(str string) (string, error) {
-	if strings.ToLower(str) != str {
-		return strings.ToLower(str), fmt.Errorf("string %v wasn't all lowercase", str)
-	}
-	return str, nil
-}
-
 func ExampleErrorCollector() {
+	makeLowerCase := func(str string) (string, error) {
+		if strings.ToLower(str) != str {
+			return strings.ToLower(str), fmt.Errorf("string %v wasn't all lowercase", str)
+		}
+		return str, nil
+	}
 	list := []string{"beep", "boOp", "Baap"}
 	result := []string{}
 	err := New()
